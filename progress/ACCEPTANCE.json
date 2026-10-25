@@ -1,0 +1,1547 @@
+{
+  "spec_version": "1.1",
+  "artifact_kind": "public_unexecuted_acceptance_template",
+  "initial_status": "NOT_RUN",
+  "allowed_statuses": [
+    "NOT_RUN",
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "PENDING_TARGET_HOST",
+    "PENDING_REAL_DEVICE",
+    "PENDING_USER_DATA",
+    "PENDING_USER_ACCEPTANCE"
+  ],
+  "required_requirement_ids": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "C1",
+    "D1",
+    "D2",
+    "D3",
+    "F1",
+    "F2",
+    "F3",
+    "G1",
+    "G2",
+    "H1",
+    "H2",
+    "H3",
+    "H4"
+  ],
+  "gates": {
+    "CORE": "全部CORE必需子项PASS；阶段代码完成不能自动放行",
+    "FULL": "所有必需子项及约定真实材料/评价子项PASS；不得以如实列TODO替代完成"
+  },
+  "status_rules": [
+    "每个PASS需要实际结果与可打开证据",
+    "模拟、测试用户与注入时钟不替代真机、真实用户验收和真实经过时间",
+    "没有外部条件时保持相应PENDING并继续不受阻工作",
+    "开发者可细分子项但不得删减必需范围或将其降为可选",
+    "T25.all_scope汇总其他必需证据，不以自己作为自身通过证据",
+    "必需子项remaining_conditions非空时不得PASS；缺少实际结果或可打开证据也不得PASS",
+    "父项只有全部必需子项PASS且没有未解决必要条件时才可PASS；T16三渠道真实材料与T24三主线真实状态分别独立核对",
+    "T16用户明确无某渠道历史或不需真实导入时，记录明确范围处理决定；不能由开发者自行免除实际材料子项，渠道导入功能仍须验证"
+  ],
+  "cases": [
+    {
+      "id": "T01",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A1"
+      ],
+      "implementation_phases": [
+        "P2"
+      ],
+      "criterion": "21:00按计划触发学习准备，记录就绪延迟；内容含三类材料及可核查出处；深入讨论和次日续答仍关联原活动",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T01.timing",
+          "criterion": "按业务时区触发，触发与就绪时间分别记录",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T01.content",
+          "criterion": "实际学习包含三类内容及可核查出处",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "actual_model_content_review",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T01.resume",
+          "criterion": "深入讨论及次日续答保持原活动",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A2"
+      ],
+      "implementation_phases": [
+        "P2"
+      ],
+      "criterion": "反思保留三维度；一次回答多项、无进展、跳过和暂停均不导致重复盘问或虚构内容",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T02.dimensions",
+          "criterion": "三维反思均可使用；一答多项不重复提问",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T02.depth",
+          "criterion": "当前维度继续展开时不强制切换，跳过及无进展不虚构内容",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "conversation_scenario",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A3"
+      ],
+      "implementation_phases": [
+        "P2"
+      ],
+      "criterion": "一句有效睡眠回答正常完成；定性描述有效，运动和情绪缺失不补成负面值",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T03.short",
+          "criterion": "一句定性睡眠回答可完成基础记录",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "conversation_scenario",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T03.optional",
+          "criterion": "运动情绪缺失不填为负面或欠账；完成后仍能继续聊",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "implementation_phases": [
+        "P2"
+      ],
+      "criterion": "连续多日沉默、短答、已读未答或单次跳过后，A1–A3仍每日触发；仅用户明确指令可改日程或暂停，保存指令来源并正确恢复",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T04.daily",
+          "criterion": "注入多日时钟，连续沉默、短答、已读未答、单次跳过后仍每日创建与首次呈现",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T04.explicit",
+          "criterion": "仅明确用户指令可改指定例程日程；保存原始来源",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T04.pause",
+          "criterion": "有限暂停到期按原指令恢复；不自动补建暂停期间活动，用户主动补填仍可进行",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T05",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A5",
+        "C1"
+      ],
+      "implementation_phases": [
+        "P1",
+        "P2"
+      ],
+      "criterion": "三类活动均可在基础记录或摘要完成后继续多轮深入讨论；跨日、重启、归档后仍回到原活动；默认澄清上限不封对话，pending不推进步骤、不阻塞第二天",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T05.three_routines",
+          "criterion": "三例程在首轮内容或基础记录完成后均能至少连续三轮追问并保留上下文；A2/A3另验证定向摘要生成后仍可继续；三轮是验证样例而非产品上限",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "conversation_scenario",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T05.later",
+          "criterion": "跨日、归档、用户收束及宿主重启后仍续原活动",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "restart_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T05.waiting",
+          "criterion": "pending不推进反思步骤、不阻塞第二天、不占计算槽",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T06",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A2",
+        "A5",
+        "C1"
+      ],
+      "implementation_phases": [
+        "P1"
+      ],
+      "criterion": "第一维度回答后重启服务或主机，原问题、已答进度、消息和摘要状态完整恢复",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T06.restart",
+          "criterion": "第一维度回答后重启服务，问题、进度、消息和摘要状态恢复",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "restart_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T06.host",
+          "criterion": "目标主机启动后恢复同一已保存活动",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "target_host",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T07",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "B1",
+        "B2",
+        "B3",
+        "C1"
+      ],
+      "implementation_phases": [
+        "P1",
+        "P4"
+      ],
+      "criterion": "电脑发起、手机回复、电脑可见；断网重试不重复提交；同一浏览器本地存储可用时刷新或短时切后台可恢复草稿，明确未发送及保存失败",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T07.devices",
+          "criterion": "真实电脑发起、手机回复、电脑可见",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "real_device",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T07.retry",
+          "criterion": "网络重试沿用提交ID，不重复处理",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T07.draft",
+          "criterion": "同一浏览器本地存储可用时刷新或短时后台后恢复未发送草稿，失败可见",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "real_device",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T08",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A5",
+        "B4",
+        "G2"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P4"
+      ],
+      "criterion": "反思待答时手机可以主动派活；主会话、活动会话和任务执行互不串接",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T08.parallel",
+          "criterion": "真实手机在反思待答时主动派活，主会话/活动/执行会话不串接",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "real_device",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T09",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A4",
+        "A5"
+      ],
+      "implementation_phases": [
+        "P0",
+        "P2"
+      ],
+      "criterion": "主机时区不同仍按业务时区触发；重复到点、手动重试、修改prompt只生成同日一个活动",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T09.time_zone",
+          "criterion": "主机时区不同仍按业务时区触发；测试用注入时钟",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T09.unique",
+          "criterion": "重复到点、修改prompt和手动重试只生成一个逻辑活动",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T09.crash",
+          "criterion": "创建会话回写前崩溃后可关联恢复或明确待核对，不盲目再建",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "fault_injection",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T10",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "implementation_phases": [
+        "P2"
+      ],
+      "criterion": "停机后仅静默补建当日按实际日程缺失的活动，不补发错过的首次通知；过去日期不自动补建；用户明确选择时按T26补填；暂停日期及非计划日不记缺席，真实运行失败保留原因",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T10.catchup",
+          "criterion": "停机恢复仅静默补建当日计划缺失活动，不自动补历史通知",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T10.intentional",
+          "criterion": "暂停和非计划日不算缺席；真实运行故障保留原因",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T11",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A1",
+        "A2",
+        "B2"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P4"
+      ],
+      "criterion": "21:30不抢占学习输入；当前可见页面确认展示后才抑制外部通知；指定手机锁屏后经选定通道收到通知并打开正确活动，免打扰及去重生效",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T11.focus",
+          "criterion": "21:30反思不抢占学习输入；当前可见页面确认提示后才抑制外部通知",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "ui_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T11.notification",
+          "criterion": "指定手机锁屏经实际选定通道收通知并进入正确活动",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "real_device",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T11.policy",
+          "criterion": "免打扰、每活动首次通知及多通道去重正确",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T12",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A4",
+        "C1",
+        "H1"
+      ],
+      "implementation_phases": [
+        "P0",
+        "P1",
+        "P3"
+      ],
+      "criterion": "模型凭据无效或供应商不可用时，回复获持久回执后立即重启仍可恢复且只处理一次；仅重试失败步骤；人工更正后新增回复及重生成仍保留更正，过时结果不得覆盖",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T12.durable",
+          "criterion": "模型凭据无效或供应商不可用时，获得持久回执后立即重启，原回答完整并只处理一次",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "fault_injection",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T12.correction",
+          "criterion": "人工更正后新回复重生成仍保留更正；过时生成不能覆盖",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T12.retry",
+          "criterion": "模型或通知故障只重试失败步骤",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "fault_injection",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T13",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "H1",
+        "H2",
+        "H3",
+        "C1"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P3"
+      ],
+      "criterion": "白天派活、闲聊、灵感与三类活动的原文完整可检索；跨日和未结束会话、附件均覆盖",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T13.coverage",
+          "criterion": "派活、闲聊、灵感与三例程原文均可检索，不按重要性过滤",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "archive_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T13.boundaries",
+          "criterion": "跨日、未结束、迟到及未交接入站消息和附件均覆盖并去重",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "archive_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T14",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A2",
+        "A3",
+        "H1"
+      ],
+      "implementation_phases": [
+        "P1",
+        "P3"
+      ],
+      "criterion": "A2/A3摘要仅使用指定活动实际回答；部分答复、隔日补录和更正更新同一活动",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T14.source",
+          "criterion": "A2/A3只从指定活动实际陈述提取；A1不混入",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T14.partial",
+          "criterion": "部分答复、深聊、隔日补记和更正更新同一摘要，未知保持未知",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T15",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "H4",
+        "D1",
+        "D3"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P3"
+      ],
+      "criterion": "更正和删除传播至派生内容；先备份、再删除、再恢复旧备份时，合并较新账本后不重新进入搜索和模型上下文；缺账本则隔离待核对；重建及重复导入不绕过删除",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T15.propagate",
+          "criterion": "更正删除传播到摘要、索引、画像及成长引用，重复导入不能绕过",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "data_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T15.older_backup",
+          "criterion": "先备份再删除再恢复旧备份，先合并较新账本后不进入检索与模型上下文",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "restore_drill",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T15.unknown",
+          "criterion": "缺少较新账本时隔离待核对，不宣称删除一致性通过",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "restore_drill",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T16",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "FULL",
+      "requirement_ids": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "implementation_phases": [
+        "P3"
+      ],
+      "criterion": "Kimi、Codex、ChatGPT分别导入并报告来源、失败、重复及缺失附件；Memory、AGENTS.md和会话不混同；移除批次不误删此前数据",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T16.kimi",
+          "criterion": "Kimi支持真实样式材料与导入报告，重复/失败/附件缺失可见",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "import_fixture",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T16.codex",
+          "criterion": "Codex会话、AGENTS作用域与memory区分且可导入",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "import_fixture",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T16.chatgpt",
+          "criterion": "ChatGPT会话与用户提供Memory区分且可导入",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "import_fixture",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T16.batch",
+          "criterion": "移除导入批次不误删此前数据，旧资料不覆盖近期更正",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "data_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T16.kimi_user_material",
+          "criterion": "Kimi的实际用户材料完成导入与结果核对；未提供材料时保持PENDING_USER_DATA，固定样本不得替代",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T16.codex_user_material",
+          "criterion": "Codex的实际用户材料完成导入与结果核对；未提供材料时保持PENDING_USER_DATA，固定样本不得替代",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T16.chatgpt_user_material",
+          "criterion": "ChatGPT的实际用户材料完成导入与结果核对；未提供材料时保持PENDING_USER_DATA，固定样本不得替代",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T17",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "G1",
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P3"
+      ],
+      "criterion": "画像有出处、时间和作用域；项目规则不改变全局偏好，近期更正供后续任务使用",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T17.provenance",
+          "criterion": "画像有来源、时间、作用域和确认状态，项目规则不变全局偏好",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "data_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T17.current",
+          "criterion": "后续实际任务使用近期有效更正，推测不冒充事实",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "actual_model_context_review",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T18",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "H1",
+        "H2",
+        "D2",
+        "D3"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P3"
+      ],
+      "criterion": "不启动DSH也能阅读按日原文、周索引和摘要；标准导出含成果关联，权威来源清楚",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T18.readable",
+          "criterion": "DSH未运行仍可阅读日原文、周索引及摘要",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "export_inspection",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T18.links",
+          "criterion": "标准导出含成果与附件关联，权威来源及版本清楚",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "export_inspection",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T19",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "MIXED",
+      "requirement_ids": [
+        "A4",
+        "H4",
+        "D3"
+      ],
+      "implementation_phases": [
+        "P1",
+        "P3",
+        "P4"
+      ],
+      "criterion": "核心：加密备份实际恢复原文、活动、任务及附件；先备份后执行动作再恢复时，全部自动执行暂停并核对较新回执，缺回执不重放。完整：干净实例导入并重建全部数据关系，异机保护与核对账本可用；分别记录子结果",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T19.core_restore",
+          "criterion": "核心数据及附件可从加密备份实际恢复",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "restore_drill",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T19.no_replay",
+          "criterion": "旧快照之后已执行动作须核对较新回执；缺失时全自动执行暂停且不重放",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "restore_drill",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T19.full_migration",
+          "criterion": "不依赖旧实例的干净实例导入并重建全部关系及路径",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "clean_instance_migration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T19.offsite",
+          "criterion": "异机备份、密钥恢复及较新核对账本真实可用",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "offsite_restore",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T20",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A4",
+        "H3"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P4"
+      ],
+      "criterion": "查看容量并清理可再生数据后，唯一原文、待答问题与有效附件仍可恢复",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T20.storage",
+          "criterion": "容量可见，清理可再生数据后唯一原文、待答问题及附件仍可恢复",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "data_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T21",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A4",
+        "C1"
+      ],
+      "implementation_phases": [
+        "P2",
+        "P4"
+      ],
+      "criterion": "无SSH或桌面登录时服务自启；实际服务账户可调用模型；全部后台调用纳入预算，双并发不超占、重启保留预留，超额不丢回复；状态可见",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T21.service",
+          "criterion": "目标机无SSH/桌面登录可自启，服务账户调用实际模型正常",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "target_host",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T21.budget",
+          "criterion": "全部后台续轮和重试纳入预算；并发事务预留、重启未清零、额度不足不丢回复不改日程",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "fault_injection",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T21.visibility",
+          "criterion": "失败、预留用量与待处理状态能从用户入口看懂",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "ui_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T22",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "G2",
+        "B4"
+      ],
+      "implementation_phases": [
+        "P2"
+      ],
+      "criterion": "明确委托直接建卡执行或排期，模糊想法不自动执行；用户控件或明确自然语言可验收指定成果版本；返修保留任务且新版本重新待验收",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T22.execute",
+          "criterion": "明确委托直接执行或排期，模糊想法不自行执行",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "task_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T22.version",
+          "criterion": "验收控件和明确自然语言绑定成果版本，返修新版本重新待验收",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "task_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T22.human",
+          "criterion": "实际成果由用户本人验收；测试夹具不替代",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "human_acceptance",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T23",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "G2",
+        "A4"
+      ],
+      "implementation_phases": [
+        "P0",
+        "P2"
+      ],
+      "criterion": "看板手动、一次性及周期执行在关闭浏览器后仍运行；无可追溯用户验收输入不能写已验收；权限阻断有界落定",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T23.server",
+          "criterion": "手动、一次性和周期任务关闭浏览器后仍由服务端执行",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "task_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T23.authority",
+          "criterion": "无可追溯用户验收输入不得写已验收；权限阻断有界落定",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "authorization_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T24",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "FULL",
+      "requirement_ids": [
+        "G1"
+      ],
+      "implementation_phases": [
+        "P3"
+      ],
+      "criterion": "三主线分别通过完整功能验证；至少一条真实成果与用户评价闭环；三主线真实当前状态分别经用户核对，明确暂未投入可记录为状态但不冒充闭环，缺数据仍待验证",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T24.doctorate",
+          "criterion": "博士主线完整验证目标、能力、计划、行动/委托、成果、复盘与修订",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "growth_fixture",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T24.startup",
+          "criterion": "科研创业主线分别完成同样全链路功能验证",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "growth_fixture",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T24.culture",
+          "criterion": "文化事业主线分别完成同样全链路功能验证",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "growth_fixture",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T24.real_loop",
+          "criterion": "至少一条主线以真实目标、行动或委托、成果、用户评价及计划调整走通闭环；仅暂未投入的状态记录不能替代",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data_and_acceptance",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T24.doctorate_current_state",
+          "criterion": "博士学位的真实当前状态及用户核对有独立记录；用户明确当期暂未投入可作为状态材料，系统仅缺数据则保留待验证，不能推断未投入",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data_and_acceptance",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T24.startup_current_state",
+          "criterion": "科研创业的真实当前状态及用户核对有独立记录；用户明确当期暂未投入可作为状态材料，系统仅缺数据则保留待验证，不能推断未投入",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data_and_acceptance",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T24.culture_current_state",
+          "criterion": "文化事业的真实当前状态及用户核对有独立记录；用户明确当期暂未投入可作为状态材料，系统仅缺数据则保留待验证，不能推断未投入",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_user_data_and_acceptance",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T25",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "FULL",
+      "requirement_ids": [
+        "A4",
+        "G1",
+        "G2",
+        "H4",
+        "D3"
+      ],
+      "implementation_phases": [
+        "P4"
+      ],
+      "criterion": "恢复演练、目标主机及真机证据、7日运行观察和全需求映射齐备；升级、数据迁移与回滚按可用版本分别验证并记录范围；所有必需子项PASS才通过完整交付",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T25.versions",
+          "criterion": "实际版本的升级、数据迁移和回滚验证范围分别记录，不能用恢复替代升级验证",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "release_verification",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T25.elapsed",
+          "criterion": "至少7个真实连续自然日观察，保留实际开始结束、版本和故障，不能用快进时钟替代",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "real_elapsed_time",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T25.all_scope",
+          "criterion": "26项及必要子项和全量需求映射均有证据；完整门无必需待验证或失败项",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "release_review",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T25.user",
+          "criterion": "完整成果版本由用户本人接受，过程审查不替代",
+          "gate": "FULL",
+          "required": true,
+          "evidence_kind": "human_acceptance",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T26",
+      "source_section": "SPEC_v1.1.md §11",
+      "gate": "CORE",
+      "requirement_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "H1",
+        "H2",
+        "G1"
+      ],
+      "implementation_phases": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "criterion": "页面与自然语言可补填前几日：已有活动复用、缺失活动按选定原日期补建；原文保留实际提交时间，摘要归原日期；多日输入明确分配，不补发历史通知、不替代今天；跳过与暂停不记欠账",
+      "status": "NOT_RUN",
+      "subchecks": [
+        {
+          "id": "T26.entry",
+          "criterion": "页面近7天入口可选任意历史日，自然语言也可进入",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "ui_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T26.reuse",
+          "criterion": "已有活动续答，缺失活动仅按选中日期和例程建一次",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T26.dates",
+          "criterion": "多日输入明确分配；原文实际提交时间与摘要原业务日期分别保存",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "data_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T26.today",
+          "criterion": "补历史不取代今天，不补发历史首次通知，不自动生成多日积压",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "automated_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T26.status",
+          "criterion": "已跳过、暂停、非计划、启用前和选填字段缺失不列为欠账",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "ui_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        },
+        {
+          "id": "T26.derived",
+          "criterion": "补记更新原摘要、索引、周回顾和成长引用，保留人工更正",
+          "gate": "CORE",
+          "required": true,
+          "evidence_kind": "data_integration",
+          "status": "NOT_RUN",
+          "evidence": [],
+          "actual_result": "",
+          "remaining_conditions": [
+            "Run and record this check against your own isolated or deployed instance."
+          ]
+        }
+      ]
+    }
+  ],
+  "pass_validation": {
+    "each_required_subcheck_needs": [
+      "status_equals_PASS",
+      "nonempty_actual_result",
+      "at_least_one_inspectable_evidence",
+      "empty_remaining_conditions"
+    ],
+    "aggregate_rule": "all_required_subchecks_pass",
+    "gate_rule": {
+      "CORE": "全部required=true且gate=CORE的子项PASS；不要求MIXED父项已完成FULL子项",
+      "FULL": "全部required=true的CORE与FULL子项PASS"
+    },
+    "validator_limit": "结构校验不能替代真实场景证据；不能仅以验收JSON自述判通过"
+  },
+  "gate_results": {
+    "CORE": false,
+    "FULL": false
+  }
+}

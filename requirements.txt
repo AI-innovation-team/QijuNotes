@@ -1,0 +1,2 @@
+# Runtime dependency; all other backend modules use the Python standard library.
+cryptography>=41

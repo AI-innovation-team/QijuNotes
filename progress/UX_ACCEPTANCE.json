@@ -1,0 +1,5 @@
+{
+  "kind": "public_unexecuted_change_acceptance_template",
+  "checks": [],
+  "note": "Record new requirements separately; do not inherit another instance acceptance."
+}

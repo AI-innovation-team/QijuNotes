@@ -1,0 +1,52 @@
+{
+  "conversations": [
+    {
+      "id": "synthetic-batch-conversation-1",
+      "title": "合成示例：计划与后续变化，非真实个人经历",
+      "messages": [
+        {
+          "id": "source-note",
+          "role": "source",
+          "content": "【合成格式示例，不应用生产】来源平台由导入时选择。本示例只含虚构的演示消息，不代表任何人的经历。会话/消息ID均为整理定位，非平台原ID。原会话URL未知。user-1为有时区时间的演示原话；user-2原时间未知。draft-1为本次模型整理，非用户原话。",
+          "created_at": null
+        },
+        {
+          "id": "user-1",
+          "role": "user",
+          "content": "合成示例：我计划明天阅读材料甲。",
+          "created_at": "2026-01-02T09:00:00+08:00"
+        },
+        {
+          "id": "user-2",
+          "role": "user",
+          "content": "合成示例：后来我取消了阅读计划，尚未读完。",
+          "created_at": null
+        },
+        {
+          "id": "draft-1",
+          "role": "assistant",
+          "content": "【模型整理／参考史稿】【合成示例】曾计划阅读材料甲，后自述取消且尚未读完；后续消息时间未知，不能记录为已阅。依据：synthetic-batch-conversation-1 / user-1、user-2。",
+          "created_at": null
+        }
+      ]
+    },
+    {
+      "id": "synthetic-batch-conversation-2",
+      "title": "合成示例：未核实线索，非真实个人经历",
+      "messages": [
+        {
+          "id": "source-note",
+          "role": "source",
+          "content": "【合成格式示例，不应用生产】此段演示仅有模型记忆摘要但没有逐字原话的情况。实际可见范围：一条虚构摘要；原会话、原时间、原消息ID、URL均未知；未访问任何历史账号。",
+          "created_at": null
+        },
+        {
+          "id": "memory-note-1",
+          "role": "source",
+          "content": "【记忆摘要／未核实】【合成示例】可能曾讨论一个学习安排。缺少用户原话，不生成user消息，不据此确认经历。",
+          "created_at": null
+        }
+      ]
+    }
+  ]
+}

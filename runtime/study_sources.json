@@ -1,0 +1,492 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-25",
+  "purpose": "公开研读来源注册；目录不是研读完成回执。调度由study模块独立管理。",
+  "requested_window": "01:00–07:00（项目时区Asia/Shanghai）",
+  "sources": [
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-loushan",
+      "title": "忆秦娥·娄山关：诗文与长征背景",
+      "author": "毛泽东；背景文：汤家玉、张成林",
+      "publisher": "人民网中国共产党新闻网／党史纵览",
+      "url": "https://cpc.people.com.cn/GB/68742/70427/70428/4984124.html",
+      "source_kind": "诗词原文及署名历史评论",
+      "category": "history",
+      "scope": "党史",
+      "locator": "《毛泽东“诗情”长征路 (2)》第“三”节；诗题日期1935年2月",
+      "availability": "readable_text",
+      "limitations": [
+        "正文包含诗词与2006年作者的解释；解释须保留作者归属。"
+      ],
+      "publication_date": "2006-11-01",
+      "work_date": "1935-02",
+      "fetch": {
+        "root_id": "zoom",
+        "start": "忆秦娥·娄山关",
+        "end": "七律·长征"
+      },
+      "continuations": [
+        "mao-longmarch"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-longmarch",
+      "title": "七律·长征：诗文与长征历程",
+      "author": "毛泽东；背景文：汤家玉、张成林",
+      "publisher": "人民网中国共产党新闻网／党史纵览",
+      "url": "https://cpc.people.com.cn/GB/68742/70427/70428/4984124.html",
+      "source_kind": "诗词原文及署名历史评论",
+      "category": "history",
+      "scope": "党史",
+      "locator": "同文第“四”节；诗题日期1935年10月",
+      "availability": "readable_text",
+      "limitations": [
+        "对诗人意图的解读属于文章作者分析。"
+      ],
+      "publication_date": "2006-11-01",
+      "work_date": "1935-10",
+      "fetch": {
+        "root_id": "zoom",
+        "start": "七律·长征"
+      },
+      "continuations": [
+        "mao-nanjing"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-nanjing",
+      "title": "七律·人民解放军占领南京与南京解放",
+      "author": "毛泽东；史文：王凤春",
+      "publisher": "中国军网—中国国防报／中国共产党新闻网",
+      "url": "https://cpc.people.com.cn/n1/2024/1216/c443712-40382719.html",
+      "source_kind": "诗词原文及历史报道",
+      "category": "history",
+      "scope": "党史",
+      "locator": "《南京解放：天翻地覆慨而慷》；末节“人间正道是沧桑”收录诗文",
+      "availability": "readable_text",
+      "limitations": [
+        "图片说明与正文对于占领总统府、插旗的日期颗粒度有差异；暂只采用1949年4月23日南京解放，不据此锁定插旗时刻。"
+      ],
+      "publication_date": "2024-12-16",
+      "work_date": "1949-04",
+      "fetch": {
+        "root_class": "show_text"
+      }
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-snow-context",
+      "title": "《沁园春·雪》意蕴何来",
+      "author": "丁毅",
+      "publisher": "中共中央党史和文献研究院",
+      "url": "https://www.dswxyjy.org.cn/n1/2019/0228/c423725-30925326.html",
+      "source_kind": "署名文本与历史解释",
+      "category": "history",
+      "scope": "党史",
+      "locator": "正文“一、思想从何而出”及文末《毛选》页码注释",
+      "availability": "readable_text",
+      "limitations": [
+        "本页已取得背景文章，不是已核完整诗词文本。",
+        "意蕴、象征、写作心理属于作者解释，不能直接写入史实清单。"
+      ],
+      "publication_date": "2015-06-03",
+      "work_date": "1936-02"
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": false,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-changsha-pending",
+      "title": "沁园春·长沙解析",
+      "author": "汪建新",
+      "publisher": "人民网理论频道",
+      "url": "https://theory.people.com.cn/n1/2024/0729/c40764-40288014.html",
+      "source_kind": "诗词研究来源待抓取",
+      "category": "history",
+      "scope": "党史",
+      "locator": "标题“万类霜天竞自由——《沁园春·长沙》解析”",
+      "availability": "fetch_blocked",
+      "limitations": [
+        "搜索可发现条目；本轮正文请求超时。"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-practice-p282",
+      "title": "实践论：印刷第282页",
+      "author": "毛泽东",
+      "publisher": "中共中央党史和文献研究院数字图书",
+      "url": "https://ebook.dswxyjy.org.cn/dswxbooks/storage/files/20220801/cfd1c7395b455e97e58af81933b2a8e555113/files/basic-html/page296.html",
+      "source_kind": "官方著作数字页",
+      "category": "modern",
+      "scope": "实践与认识",
+      "locator": "《毛泽东选集》第一卷；数字页296，印刷页282",
+      "availability": "readable_text",
+      "limitations": [
+        "仅本页已取得；跨页句子需结合相邻页，不冒称整篇已读。",
+        "页282含编者说明；原著与编注须区分。"
+      ],
+      "work_date": "1937-07",
+      "fetch": {
+        "root_class": "text-container"
+      },
+      "continuations": [
+        "mao-practice-p283"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-practice-p283",
+      "title": "实践论：印刷第283页",
+      "author": "毛泽东",
+      "publisher": "中共中央党史和文献研究院数字图书",
+      "url": "https://ebook.dswxyjy.org.cn/dswxbooks/storage/files/20220801/cfd1c7395b455e97e58af81933b2a8e555113/files/basic-html/page297.html",
+      "source_kind": "官方著作数字页",
+      "category": "modern",
+      "scope": "实践与认识",
+      "locator": "《毛泽东选集》第一卷；数字页297，印刷页283",
+      "availability": "readable_text",
+      "limitations": [
+        "本页开头承接上一页，结尾未完；需保留跨页范围。"
+      ],
+      "work_date": "1937-07",
+      "fetch": {
+        "root_class": "text-container"
+      },
+      "continuations": []
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "digitized_primary_text",
+      "short_excerpt": null,
+      "id": "chuanshilu-upper-1",
+      "title": "传习录上卷一",
+      "author": "王阳明及门人记录",
+      "publisher": "识典古籍",
+      "url": "https://www.shidianguji.com/book/SDZJ0013/chapter/1jmneqptfvi1m",
+      "source_kind": "古籍原文数字转录",
+      "category": "classic",
+      "scope": "中华传统经典",
+      "locator": "传习录上卷一；页面原文区域",
+      "availability": "readable_text",
+      "limitations": [
+        "已取得原文；本轮未核定底本版次，不能冒称校勘定本。",
+        "现代译文不属于本次采集范围。"
+      ],
+      "fetch": {
+        "root_class": "chapter-reader"
+      },
+      "continuations": [
+        "chuanshilu-upper-2"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "not_applicable",
+      "identity_status": "digitized_primary_text",
+      "short_excerpt": null,
+      "id": "chuanshilu-upper-2",
+      "title": "传习录上卷二",
+      "author": "王阳明及门人记录",
+      "publisher": "识典古籍",
+      "url": "https://www.shidianguji.com/book/SDZJ0013/chapter/1jmneqq1mp54i",
+      "source_kind": "古籍原文数字转录",
+      "category": "classic",
+      "scope": "中华传统经典",
+      "locator": "传习录上卷二；页面原文区域",
+      "availability": "readable_text",
+      "limitations": [
+        "已取得原文；本轮未核定底本版次，不能冒称校勘定本。",
+        "现代译文不属于本次采集范围。"
+      ],
+      "fetch": {
+        "root_class": "chapter-reader"
+      },
+      "continuations": []
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "xiong-edition",
+      "title": "《荆楚文库·熊十力集》八卷本出版点校说明",
+      "author": "郭齐勇、刘依平",
+      "publisher": "武汉大学新闻网",
+      "url": "https://news.whu.edu.cn/info/1015/452937.htm",
+      "source_kind": "编者版本说明与目录",
+      "category": "classic",
+      "scope": "熊十力文集",
+      "locator": "编者点校说明及各卷内容介绍",
+      "availability": "edition_note_only",
+      "limitations": [
+        "实际取得的是编者说明，不是熊十力著作正文。",
+        "该八卷本收中华人民共和国成立前作品，不等同终身全集。"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "author_reviewed_speech_text",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "zhai-fudan-2022",
+      "title": "“一带一路”与东亚生产网络的拓展与重构",
+      "author": "翟东升",
+      "publisher": "复旦大学一带一路及全球治理研究院",
+      "url": "https://brgg.fudan.edu.cn/articleinfo_5337.html",
+      "source_kind": "作者审阅授权的论坛演讲文本",
+      "category": "modern",
+      "scope": "政治经济学",
+      "locator": "导读注明第六届论坛2022年11月10–12日；正文自“演讲／翟东升”至致谢",
+      "availability": "readable_text",
+      "limitations": [
+        "页面题名“从追赶到反超，中日制造网络地位为何反转？”；不等于带时间轴的音视频逐字稿。",
+        "2022年数字、判断和预测保留时间及作者归属；课程引用数字另核统计原始出处。"
+      ],
+      "publication_date": "2022-11-29"
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "edited_speech_text",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "lin-chengze-2022",
+      "title": "中国经济的重大新挑战与应对",
+      "author": "林毅夫",
+      "publisher": "北京大学国家发展研究院",
+      "url": "https://nsd.pku.edu.cn/docs/20220908144505438269.pdf",
+      "source_kind": "机构发布的演讲整理稿",
+      "category": "modern",
+      "scope": "政治经济学",
+      "locator": "国发院简报2022年7月第008期；印刷页25–28；脚注8说明2022年5月18日第2期承泽论坛",
+      "availability": "readable_text",
+      "limitations": [
+        "本轮首次PDF文本可读，复查超时；需要缓存成功后才自动研读。",
+        "是演讲整理稿，未取得原视频逐字字幕；2022年预测不当作今天已成立事实。"
+      ],
+      "publication_date": "2022-07"
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": true,
+      "ready_for_bounded_reading": true,
+      "transcript_status": "published_lecture_text",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "wang-fudan-2014",
+      "title": "马克思哲学解读当代人类经济生活中的资本逻辑",
+      "author": "王德峰",
+      "publisher": "复旦大学新闻文化网／文汇报",
+      "url": "https://news.fudan.edu.cn/2014/0319/c47a63971/page.htm",
+      "source_kind": "大学刊载的讲座文字",
+      "category": "modern",
+      "scope": "哲学与政治经济学",
+      "locator": "2014年3月8日东方讲坛·文汇讲堂；正文各讲座小节",
+      "availability": "readable_text",
+      "limitations": [
+        "正文可读；不是已匹配B站具体课集的字幕。",
+        "网页来源栏年份有排印错误，以页面发布时间及活动说明区分。"
+      ],
+      "publication_date": "2014-03-19"
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": false,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_obtained",
+      "identity_status": "platform_uploader_matched",
+      "short_excerpt": null,
+      "id": "weimingzi-bili",
+      "title": "哲学入门教程—导言",
+      "author": "未明子",
+      "publisher": "哔哩哔哩原UP页面",
+      "url": "https://www.bilibili.com/list/23191782?bvid=BV1gW411a7yC&oid=17248579",
+      "source_kind": "原作者视频目录",
+      "category": "modern",
+      "scope": "哲学",
+      "locator": "视频BV1gW411a7yC；UP未明子，UID23191782",
+      "availability": "video_metadata_only",
+      "limitations": [
+        "已核原标题、作者、日期和系列目录；没有取得正文字幕，不生成研读笔记。"
+      ],
+      "publication_date": "2017-12-14"
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": false,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_obtained",
+      "identity_status": "platform_uploader_matched",
+      "short_excerpt": null,
+      "id": "fuyuntian-bili",
+      "title": "中华文明历险记-6及系列入口",
+      "author": "伏云天",
+      "publisher": "哔哩哔哩原UP页面",
+      "url": "https://www.bilibili.com/list/3546751319410941/?bvid=BV1a5UvB6EvF&oid=115616291815763",
+      "source_kind": "原作者视频目录",
+      "category": "history",
+      "scope": "中国史",
+      "locator": "UP伏云天，UID3546751319410941；BV1a5UvB6EvF；同页系列1–10",
+      "availability": "video_metadata_only",
+      "limitations": [
+        "已核账号与系列名；没有字幕正文。",
+        "讲者历史解释须与史料分开，不能把视频标题转成史实。"
+      ],
+      "publication_date": "2025-11-26"
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": false,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_obtained",
+      "identity_status": "unresolved",
+      "short_excerpt": null,
+      "id": "wang-bili-pending",
+      "title": "王德峰B站课程账号待匹配",
+      "author": "王德峰",
+      "publisher": "哔哩哔哩",
+      "url": null,
+      "source_kind": "平台入口待确认",
+      "category": "modern",
+      "scope": "哲学",
+      "locator": "以复旦身份页和原作者平台链接交叉核定",
+      "availability": "identity_unresolved",
+      "limitations": [
+        "已确认大学教师身份及可读讲座，但没有核定用户所指B站课集的原UP链接。"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": false,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_obtained",
+      "identity_status": "platform_uploader_matched",
+      "short_excerpt": null,
+      "id": "ku-zhexue-pending",
+      "title": "自然属性何以被象征秩序赋予意义？",
+      "author": "酷哲学",
+      "publisher": "哔哩哔哩原UP视频",
+      "url": "https://www.bilibili.com/video/BV1WLrLBXERF/",
+      "source_kind": "原作者视频元信息",
+      "category": "modern",
+      "scope": "哲学",
+      "locator": "用户指定BV1WLrLBXERF；UP酷哲学，UID80757738；单P，时长05:56",
+      "availability": "video_metadata_only",
+      "publication_date": "2026-01-13",
+      "platform": {
+        "bvid": "BV1WLrLBXERF",
+        "aid": 115886975419869,
+        "cid": 35359164429,
+        "uploader_uid": 80757738,
+        "uploader_url": "https://space.bilibili.com/80757738",
+        "duration_seconds": 356,
+        "published_at": "2026-01-13T17:05:53+08:00",
+        "series_status": "not_reported_by_platform",
+        "identity_evidence": "https://api.bilibili.com/x/web-interface/view?bvid=BV1WLrLBXERF",
+        "subtitle_check": "https://api.bilibili.com/x/player/v2?aid=115886975419869&cid=35359164429"
+      },
+      "limitations": [
+        "已按用户链接核实视频和UP账号；平台未返回此视频的合集信息，未推定系列归属。",
+        "未登录的公开字幕接口返回空列表，尚未取得字幕或讲义正文；空列表不代表视频一定没有字幕。"
+      ]
+    },
+    {
+      "checked_on": "2026-10-25",
+      "study_status": "source_registered",
+      "body_obtained": false,
+      "ready_for_bounded_reading": false,
+      "transcript_status": "not_applicable",
+      "identity_status": "institutional_publication",
+      "short_excerpt": null,
+      "id": "mao-selected-catalog",
+      "title": "毛泽东选集第一卷目录",
+      "author": "毛泽东",
+      "publisher": "共产党员网",
+      "url": "https://www.12371.cn/special/mzdxj/dyj/",
+      "source_kind": "官方目录与音频入口",
+      "category": "modern",
+      "scope": "毛泽东选集",
+      "locator": "第一卷篇目列表",
+      "availability": "catalog_only",
+      "limitations": [
+        "目录及播放入口已见；不算正文已研读。"
+      ]
+    }
+  ],
+  "poetry_history_sequence": [
+    "mao-loushan",
+    "mao-longmarch",
+    "mao-snow-context",
+    "mao-nanjing"
+  ],
+  "rules": [
+    "只有取得真实正文且产生带原文引用的有效笔记，才能记为studied。",
+    "资料原文、作者论点、起居理论分析和现实假设分别记录；引用字符串校验不代表语义正确。",
+    "视频目录、简介、AI转述不能冒充字幕；无字幕来源保留待接入。",
+    "公开仓库仅保存元数据；长正文只保存在项目私有SQLite缓存中。"
+  ]
+}

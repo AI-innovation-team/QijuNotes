@@ -1,0 +1,14 @@
+{
+  "version": "1.25.2",
+  "package": "io.heckel.ntfy",
+  "flavor": "fdroid-release",
+  "source_url": "https://github.com/binwiederhier/ntfy-android/releases/download/v1.25.2/ntfy-1.25.2-fdroid-release.apk",
+  "release_metadata_url": "https://api.github.com/repos/binwiederhier/ntfy-android/releases/tags/v1.25.2",
+  "sha256": "8a1075c0963caa1e0dc404996531bc641cb2b982f92a4bc692d4999f9eb53f39",
+  "bytes": 9249866,
+  "publisher_certificate_sha256": "6e145d7ae685eff75468e5067e03a6c3645453343e4e181dac8b6b17ff67489d",
+  "publisher_fingerprint_source": "https://docs.ntfy.sh/subscribe/phone/",
+  "checked_at": "2026-10-23T10:08:37.475026+08:00",
+  "verification_scope": "GitHub release asset SHA256 and length match; embedded signing certificate fingerprint matches official ntfy documentation. No full independent apksigner verification tool is installed.",
+  "note": "GitHub official release signed by the author; not the separately signed F-Droid repository APK. Android installation is still pending."
+}

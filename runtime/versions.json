@@ -1,0 +1,12 @@
+{
+  "dsh_version": "0.2.1-rc.2",
+  "source_commit": "687f282e8625c6b8d11ff58211a90524be2e4317",
+  "node_runtime": "v24.21.0",
+  "node_requirement": "^22.19.0 || >=24.0.0",
+  "lock_sha256": "f34576ee3f26e8acac1fa5341a3a5ae8b1ed07a82e153117c4df18a6df50277c",
+  "taskboard_source_only": {
+    "version": "0.9.2",
+    "commit": "cf00e4ee8884fa6463da991b2fa2ac751448fc30",
+    "installed": false
+  }
+}

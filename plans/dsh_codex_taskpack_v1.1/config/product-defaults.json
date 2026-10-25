@@ -1,0 +1,155 @@
+{
+  "configuration_kind": "project_product_defaults_not_dsh_native",
+  "spec_version": "1.1",
+  "time_zone": "Asia/Shanghai",
+  "routines": [
+    {
+      "id": "A1",
+      "label": "每日一学",
+      "schedule": {
+        "frequency": "daily",
+        "local_time": "21:00"
+      },
+      "initial_content": [
+        "典籍一段",
+        "史事一则",
+        "现代概念一个"
+      ],
+      "mode": "conversation"
+    },
+    {
+      "id": "A2",
+      "label": "每日反思",
+      "schedule": {
+        "frequency": "daily",
+        "local_time": "21:30"
+      },
+      "dimensions": [
+        "博士学位",
+        "科研创业",
+        "文化事业"
+      ],
+      "mode": "conversation"
+    },
+    {
+      "id": "A3",
+      "label": "每日打卡",
+      "schedule": {
+        "frequency": "daily",
+        "local_time": "08:30"
+      },
+      "initial_topic": "睡眠",
+      "mode": "conversation"
+    }
+  ],
+  "schedule_control": {
+    "automatic_frequency_reduction": false,
+    "frequency_change_sources": [
+      "explicit_user_message",
+      "explicit_user_ui_action",
+      "expiry_of_user_specified_pause"
+    ],
+    "silence_changes_schedule": false,
+    "short_reply_changes_schedule": false,
+    "read_receipt_changes_schedule": false,
+    "single_skip_changes_future_schedule": false,
+    "record_user_change_source": true,
+    "expire_pause_to_previous_schedule": true,
+    "next_trigger_after_pause": "next_future_slot",
+    "unique_activity_key": [
+      "user_id",
+      "routine_id",
+      "business_date"
+    ]
+  },
+  "conversation": {
+    "resume_existing_activity": true,
+    "close_on_summary": false,
+    "close_on_basic_record_complete": false,
+    "product_max_conversation_turns": null,
+    "unsolicited_clarifications_per_checkin": 1,
+    "unsolicited_clarifications_per_reflection_dimension": 1,
+    "user_led_depth_limited_by_clarification_count": false,
+    "waiting_for_user_occupies_compute_slot": false,
+    "runtime_budget_still_applies": true
+  },
+  "backfill": {
+    "enabled": true,
+    "entry_points": [
+      "today_view",
+      "natural_language"
+    ],
+    "default_view_days": 7,
+    "selectable_dates": "any_past_business_date",
+    "pre_activation_dates_are_missing": false,
+    "optional_fields_are_missing": false,
+    "skipped_or_paused_dates_are_debt": false,
+    "existing_activity": "resume",
+    "absent_activity": "create_only_for_explicitly_selected_date_and_routine",
+    "summary_date": "selected_business_date",
+    "raw_message_date": "actual_submission_time",
+    "emit_historical_first_notification": false,
+    "satisfies_today_activity": false,
+    "multiple_date_input": "assign_only_when_dates_are_clear",
+    "update_derived_indexes_and_reviews": true
+  },
+  "recovery": {
+    "automatic_catchup": "today_scheduled_missing_activities_only",
+    "catchup_notifications": "silent",
+    "automatically_create_prior_day_backlog": false,
+    "restore_old_snapshot": "isolated_reconciliation_before_any_automatic_execution"
+  },
+  "notifications": {
+    "first_per_activity": 1,
+    "automatic_nags_per_activity": 0,
+    "extra_reminder": "explicit_user_snooze_only",
+    "quiet_hours": {
+      "start": "23:00",
+      "end": "08:00"
+    },
+    "foreground_suppression": {
+      "recent_interaction_minutes": 5,
+      "require_current_visible_connection": true,
+      "require_render_acknowledgement": true
+    },
+    "delivery_is_read_receipt": false,
+    "notification_open_target": "activity_and_current_question"
+  },
+  "execution": {
+    "background_generation_concurrency": 2,
+    "step_timeout_seconds": 300,
+    "automatic_retries": 2,
+    "total_attempts": 3,
+    "human_wait_counts_toward_timeout": false,
+    "foreground_priority": true
+  },
+  "background_budget": {
+    "daily_tokens": 60000,
+    "calendar_month_tokens": 1000000,
+    "max_generated_tokens_per_request": 8192,
+    "count_reasoning_according_to_provider": true,
+    "cover_all_followup_calls_and_retries": true,
+    "atomic_persistent_reservations": true,
+    "reset_unverified_reservations_on_restart": false,
+    "quota_exhaustion_changes_user_schedule": false,
+    "quota_exhaustion_behavior": "save_replies_keep_daily_activity_and_show_processing_pending",
+    "currency_limit": null,
+    "foreground_and_delegated_tasks": "separately_recorded_budgets",
+    "codex_development_usage_included": false
+  },
+  "backup": {
+    "local_time": "03:30",
+    "encrypted": true,
+    "restore_points": {
+      "daily": 7,
+      "weekly": 4,
+      "monthly": 6
+    },
+    "raw_archive_retention": "separate_user_policy",
+    "latest_correction_deletion_and_side_effect_journals": "independently_protected_and_reconciled"
+  },
+  "release": {
+    "minimum_actual_observation_days": 7,
+    "simulation_is_elapsed_time_evidence": false
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "version": "2.32.0",
+  "platform": "linux_amd64",
+  "archive_url": "https://github.com/binwiederhier/ntfy/releases/download/v2.32.0/ntfy_2.32.0_linux_amd64.tar.gz",
+  "archive_sha256": "681819773a69079c0efdd64c096cc2149d9290243feb3e31dd3ef04a2c85f1ed",
+  "binary_sha256": "4aac1d7c174b7425dfc0c11f8d20980fdaf78b6a872738d8a1d6938c793a1fd9",
+  "source": "https://github.com/binwiederhier/ntfy/releases/tag/v2.32.0"
+}

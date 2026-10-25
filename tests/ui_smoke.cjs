@@ -1,0 +1,30 @@
+// Isolated local Chromium, never the user's signed-in browser.
+const { chromium }=require('../.runtime/browser/node_modules/playwright');
+const fs=require('fs');
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:(process.env.QIJU_CHROMIUM_PATH || chromium.executablePath()),args:['--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});let errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:18880');
+ await page.getByLabel('访问密钥').fill(fs.readFileSync('.runtime/qa/access-token','utf8').trim());
+ await page.getByRole('button',{name:'打开起居注'}).click();
+ await page.getByText('把今天，慢慢记下来。').waitFor();
+ await page.screenshot({path:'evidence/P1/desktop.png',fullPage:true});
+ await page.locator('[data-action="open-routine"][data-routine="A3"]').click();
+ await page.getByLabel('输入消息').fill('固定测试样本：睡得一般，稍后想继续讨论。');
+ await page.getByRole('button',{name:'发送 ↑'}).click();
+ await page.getByText('固定测试样本：睡得一般，稍后想继续讨论。',{exact:true}).first().waitFor();
+ await page.getByLabel('输入消息').fill('未发送测试草稿');await page.reload();
+ await page.getByLabel('输入消息').waitFor();
+ if(await page.getByLabel('输入消息').inputValue()!=='未发送测试草稿')throw Error('draft not restored');
+ await page.getByRole('button',{name:'今天到这里',exact:true}).click();
+ if(await page.getByLabel('输入消息').isDisabled())throw Error('conversation closed after end');
+ await page.screenshot({path:'evidence/P1/conversation.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:'evidence/P1/mobile-viewport.png',fullPage:true});
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);if(overflow)throw Error('mobile overflow');
+ await page.goto('http://127.0.0.1:18880/#growth');await page.getByText('让成长的判断，有真实的依据。').waitFor();
+ await page.getByRole('button',{name:'＋ 添加记录'}).click();await page.getByLabel('内容',{exact:true}).fill('固定测试目标：明确研究产物');
+ await page.locator('#growth-form button[type="submit"]').click();await page.locator('.growth-item').filter({hasText:'固定测试目标：明确研究产物'}).first().waitFor();
+ await page.goto('http://127.0.0.1:18880/#tasks');await page.screenshot({path:'evidence/P2/tasks.png',fullPage:true});
+ fs.writeFileSync('evidence/P1/ui-smoke.json',JSON.stringify({at:new Date().toISOString(),kind:'local_chromium_simulated_mobile_not_real_phone',checks:['authenticated login','durable reply shown','refresh draft persists unsent','end retains composer','mobile viewport no horizontal overflow','growth saved from real UI'],page_errors:errors},null,2));
+ if(errors.length)throw Error(errors.join('\n'));await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

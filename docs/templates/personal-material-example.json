@@ -1,0 +1,24 @@
+{
+  "id": "synthetic-preparation-example-not-personal-history",
+  "title": "合成格式示例：非个人经历，不应用到生产资料库",
+  "messages": [
+    {
+      "id": "synthetic-user-1",
+      "role": "user",
+      "content": "合成示例，仅用于格式验证：我计划明天阅读材料甲，这不是实际个人经历。",
+      "created_at": "2026-01-02T09:00:00+08:00"
+    },
+    {
+      "id": "synthetic-assistant-1",
+      "role": "assistant",
+      "content": "合成示例：你可以把阅读计划拆成两步。助手建议不能当作用户已经采取的行动。",
+      "created_at": "2026-01-02T09:01:00+08:00"
+    },
+    {
+      "id": "synthetic-user-2",
+      "role": "user",
+      "content": "合成示例，仅用于格式验证：我后来修改了计划。原时间未知，不能使用整理时间代替。",
+      "created_at": null
+    }
+  ]
+}
