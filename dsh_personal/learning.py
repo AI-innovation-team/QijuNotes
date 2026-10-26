@@ -13,13 +13,16 @@ import re
 import unicodedata
 from urllib.parse import unquote
 
-from .core import dumps
+from .core import TZ, dumps
 from .conversation_style import routine_strategy
 from .learning_catalog import (canonical_url, catalog_status, ready_history_cards)
 
 VERSION = 2
 REVIEWED_ON = '2026-10-22'
 PREFIX = 'learning_selection:'
+ARCHIVE_PREFIX = 'learning_selection_archive:'
+CATEGORIES = ('classic', 'history', 'modern')
+_CATEGORY_LABELS = {'classic': '中华典籍', 'history': '中国史与党史', 'modern': '现代概念'}
 
 
 def _card(id, category, scope, title, url, source_title, locator, facts,
@@ -288,6 +291,97 @@ def source_catalog():
     return copy.deepcopy(_CARDS)
 
 
+class TopicUnavailable(ValueError):
+    """A requested subject has no usable source text in the local curriculum."""
+
+    def __init__(self, missing, available):
+        self.missing = copy.deepcopy(missing)
+        self.available = copy.deepcopy(available)
+        parts = [f"{_CATEGORY_LABELS[item['category']]}“{item['topic']}”" for item in missing]
+        super().__init__('已保存的主题暂无可用正文：' + '；'.join(parts)
+                         + '。可在学习设置中选择已有来源主题，或补充该主题的来源材料后继续备课。')
+
+    def as_dict(self):
+        return {'status': 'source_needed', 'message': str(self),
+                'missing': copy.deepcopy(self.missing), 'available': copy.deepcopy(self.available)}
+
+
+def _available_cards(db, day=None):
+    from .study import learning_cards
+    day = day or dt.datetime.now(TZ).date().isoformat()
+    cards = list(_CARDS) + ready_history_cards(db) + learning_cards(db, day)
+    result = {}
+    for card in cards:
+        if (card.get('category') in CATEGORIES and
+                (card['category'] != 'history' or card.get('scope') in ('中国史', '二十四史', '党史'))):
+            result[card['id']] = card
+    return list(result.values())
+
+
+def source_options(db, day=None):
+    """Public metadata of actual usable material; no network or writes."""
+    return [{key: card[key] for key in ('category', 'id', 'title', 'source_title', 'scope')}
+            for card in _available_cards(db, day)]
+
+
+def _keywords(topic):
+    # Each comma/newline/space separates an alternative subject. Avoid semantic
+    # guesses: a missing exact subject stays missing rather than invoking memory.
+    text = unicodedata.normalize('NFKC', topic).casefold()
+    return list(dict.fromkeys(word.strip('《》“”"\'') for word in
+                              re.split(r'[\s,，、;；]+', text) if word.strip('《》“”"\'')))
+
+
+def _contains_keyword(text, keyword):
+    text = unicodedata.normalize('NFKC', text).casefold()
+    if re.fullmatch(r'[a-z0-9_-]+', keyword):
+        return bool(re.search(r'(?<![a-z0-9_])' + re.escape(keyword) + r'(?![a-z0-9_])', text))
+    return keyword in text
+
+
+def _topic_score(card, topic):
+    # Titles and scope offer direct identification; original excerpts and stored
+    # teaching guidance can also identify a subject without inventing new facts.
+    title = ' '.join(card.get(key, '') for key in ('title', 'source_title'))
+    scope = card.get('scope', '')
+    content = '\n'.join([card.get('excerpt', ''), *card.get('verified_facts', []),
+                         dumps(card.get('study_guidance', {})), dumps(card.get('teaching_plan', {}))])
+    scores = []
+    for keyword in _keywords(topic):
+        scores.append(3 if _contains_keyword(title, keyword) else
+                      2 if _contains_keyword(scope, keyword) else
+                      1 if _contains_keyword(content, keyword) else 0)
+    return max(scores, default=0), sum(score > 0 for score in scores)
+
+
+def topic_availability(db, settings, day=None):
+    """Return missing categories for a settings payload, without selecting/writing."""
+    candidates = _available_cards(db, day)
+    return [{'category': category, 'topic': topic}
+            for category, topic in settings.get('topics', {}).items()
+            if category in CATEGORIES and topic.strip() and not any(
+                card['category'] == category and _topic_score(card, topic)[0] for card in candidates)]
+
+
+def source_identity_frozen(db, activity_id):
+    """Keep sources once a lesson or conversation exists; a placeholder is not one.
+
+    The same rule applies while preparing, at the due-time activation transaction,
+    and after manually opening an unfinished lesson. Deleted message rows still
+    prove a prior conversation existed, so later configuration cannot rewrite it.
+    """
+    activity = db.execute('SELECT ready_at FROM activities WHERE id=?', (activity_id,)).fetchone()
+    if not activity or activity['ready_at']:
+        return True
+    return bool(db.execute("SELECT 1 FROM messages WHERE activity_id=? AND ((role='user' AND processing_state NOT IN ('command_pending','command_applied')) OR "
+                           "(role='assistant' AND processing_state IN ('native','learning_reviewed','learning_edited'))) "
+                           "LIMIT 1", (activity_id,)).fetchone())
+
+
+def _can_reselect(db, activity, manifest):
+    return not manifest.get('delivery') and not source_identity_frozen(db, manifest['activity_id'])
+
+
 def _decode(raw, activity_id):
     try:
         value = json.loads(raw)
@@ -395,19 +489,35 @@ def prepare_learning(store, activity_id, requirements=None):
     Each pack has all three daily categories. Unshown selections rotate too, but
     only recorded native deliveries justify a review label. Dates describe the
     original business activity, including historical backfill, never mastery.
-    Caller-supplied current requirements affect the prompt, not this snapshot.
+    Saved topic settings choose sources before a lesson is delivered or discussed.
+    Published activity source identities remain fixed; teaching text can update.
     """
     requirements_rule = _requirements_rule(requirements)
     with store.db(True) as db:
-        activity = db.execute('SELECT routine,business_date FROM activities WHERE id=?',
+        activity = db.execute('SELECT routine,business_date,ready_at FROM activities WHERE id=?',
                               (activity_id,)).fetchone()
         if not activity or activity['routine'] != 'A1':
             raise ValueError('仅每日一学活动可选择学习来源')
+        # Backfill and deferred lessons keep their original business date, but
+        # can use sources obtained by the actual preparation date.
+        available_through = max(activity['business_date'], store.today())
+        from .routine_settings import read_settings
+        configuration = read_settings(db, 'A1')
+        settings = configuration['settings']
+        teaching_request = settings.get('teaching_request', '').strip()
+        if teaching_request:
+            requirements_rule = '\n'.join(filter(None, (requirements_rule, teaching_request)))
         history = prune_learning_history(db)
         old = db.execute('SELECT value FROM meta WHERE key=?', (PREFIX + activity_id,)).fetchone()
-        if old:
-            manifest = _decode(old[0], activity_id)
+        old_manifest = _decode(old[0], activity_id) if old else None
+        reselect = bool(old_manifest and
+                        old_manifest.get('routine_settings_version', 0) != configuration['version'] and
+                        _can_reselect(db, activity, old_manifest))
+        if old_manifest and not reselect:
+            manifest = old_manifest
         else:
+            # Superseded private preparation must not bias the new source choice.
+            history = [item for item in history if item['activity_id'] != activity_id]
             # Pack numbers are a curriculum-local identity: a legacy world's
             # history selection must not count as a new Chinese-history lesson.
             counts = [sum(m['version'] == VERSION and m['pack_index'] == i for m in history)
@@ -453,7 +563,7 @@ def prepare_learning(store, activity_id, requirements=None):
             # New nightly readings extend all three disciplines. Only exact
             # original chunks enter the factual packet; notes guide teaching.
             from .study import learning_cards
-            studied=learning_cards(db,activity['business_date'])
+            studied=learning_cards(db,available_through)
             usage={}
             for previous in history:
                 for card in previous['cards']:
@@ -463,6 +573,27 @@ def prepare_learning(store, activity_id, requirements=None):
                 if available:
                     cards[i]=min(available,key=lambda c:(usage.get(c['id'],0),c['retrieval']['fetched_at'],c['id']))
                     selection='night_study_curriculum'
+            topics = settings.get('topics', {})
+            if any(topics.values()):
+                candidates = _available_cards(db, available_through)
+                missing = []
+                for i, category in enumerate(CATEGORIES):
+                    topic = topics.get(category, '').strip()
+                    if not topic:
+                        continue
+                    matching = [(c, _topic_score(c, topic)) for c in candidates if c['category'] == category]
+                    matching = [(c, score) for c, score in matching if score[0]]
+                    if not matching:
+                        missing.append({'category': category, 'topic': topic})
+                        continue
+                    chosen, score = min(matching, key=lambda item: (
+                        -item[1][0], usage.get(item[0]['id'], 0), -item[1][1], item[0]['id']))
+                    cards[i] = copy.deepcopy(chosen)
+                if missing:
+                    options = [{key: card[key] for key in ('category', 'id', 'title', 'source_title', 'scope')}
+                               for card in candidates]
+                    raise TopicUnavailable(missing, options)
+                selection = 'custom_topics'
             for card in cards:
                 if 'teaching_plan' not in card:
                     card['teaching_plan'] = _teaching_plan(card['id'])
@@ -475,13 +606,21 @@ def prepare_learning(store, activity_id, requirements=None):
                 card['first_presented_activity_id'] = prior[0]['activity_id'] if prior else None
             manifest = dict(version=VERSION, activity_id=activity_id,
                             business_date=activity['business_date'], prepared_at=store.stamp(),
+                            source_available_through=available_through,
                             pack_index=index, cards=cards, delivery=None,
+                            routine_settings_version=configuration['version'],
+                            routine_settings=copy.deepcopy(settings),
                             world_fun_fact=_world_fun_fact(index),
                             teaching_policy='目标、解释、实例、误区、可选练习与逐轮反馈；中国史/党史详讲，外国史一句趣闻',
                             history_scope='仅已登记来源的实际生成记录；不代表已阅读或掌握，早期自由生成材料未自动核对',
                             source_policy='从持久公开来源目录或已审查备用课选材；自动抓取不等于逐条事实核验，本次生成不进行实时联网核查',
                             source_selection=dict(mode=selection, catalog=catalog_status(db)))
-            db.execute('INSERT INTO meta VALUES(?,?)', (PREFIX + activity_id, dumps(manifest)))
+            if reselect:
+                archive_key = ARCHIVE_PREFIX + activity_id + ':' + str(old_manifest.get('routine_settings_version', 0))
+                db.execute('INSERT OR IGNORE INTO meta VALUES(?,?)', (archive_key, old[0]))
+                db.execute('UPDATE meta SET value=? WHERE key=?', (dumps(manifest), PREFIX + activity_id))
+            else:
+                db.execute('INSERT INTO meta VALUES(?,?)', (PREFIX + activity_id, dumps(manifest)))
     return {'manifest': manifest, 'prompt': learning_prompt(manifest, requirements_rule)}
 
 

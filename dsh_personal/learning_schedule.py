@@ -71,9 +71,13 @@ def activate_manual(db, store, aid):
 def _refresh_requirements(db, store, aid):
     from .learning_guard import _profiles, _preference_hash
     digest = _preference_hash(_profiles(db, store.today()))
+    from .routine_settings import read_settings
+    settings_version = read_settings(db, 'A1')['version']
+    if settings_version:
+        digest = hashlib.sha256(dumps([digest, settings_version]).encode()).hexdigest()
     key = 'learning_prepared_requirements:' + aid
     prior = db.execute('SELECT value FROM meta WHERE key=?', (key,)).fetchone()
-    if prior and prior['value'] != digest:
+    if (prior and prior['value'] != digest) or (not prior and settings_version):
         # ensure_session rotates to the current requirement signature. A new job
         # version permits exactly one new initial generation per requirement set;
         # the native submission remains idempotent within its new session.
@@ -93,6 +97,22 @@ def tick(store, recovery=False):
         if db.execute("SELECT 1 FROM sqlite_master WHERE name='records_meta'").fetchone() and db.execute("SELECT 1 FROM records_meta WHERE key='quarantine' AND value='1'").fetchone():
             return
         schedule = dict(db.execute("SELECT * FROM schedules WHERE routine='A1'").fetchone())
+        # A requested topic may become available through catalog/night study.
+        # Recheck at most once a minute, without model/network work in SQL.
+        from .learning import topic_availability
+        from .routine_settings import read_settings
+        for gap_row in db.execute("SELECT key,value FROM meta WHERE key LIKE 'learning_topic_gap:%'").fetchall():
+            gap=json.loads(gap_row['value']);aid=gap_row['key'].split(':',1)[1]
+            if (now-dt.datetime.fromisoformat(gap['checked_at'])).total_seconds()<60:continue
+            activity=db.execute('SELECT business_date FROM activities WHERE id=?',(aid,)).fetchone()
+            if not activity:continue
+            available_through=max(activity['business_date'],store.today())
+            if not topic_availability(db,read_settings(db,'A1')['settings'],available_through):
+                db.execute("UPDATE jobs SET status='pending',run_after=?,attempts=0 WHERE kind='learning' AND target=? AND status='material_wait'",(store.stamp(),aid))
+                db.execute('DELETE FROM meta WHERE key=?',(gap_row['key'],))
+            else:
+                gap['checked_at']=store.stamp()
+                db.execute('UPDATE meta SET value=? WHERE key=?',(dumps(gap),gap_row['key']))
         signature = _signature(schedule)
         for offset in (0, 1):
             day = (local.date()+dt.timedelta(days=offset)).isoformat(); due = _slot(schedule, day)

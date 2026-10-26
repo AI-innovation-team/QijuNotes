@@ -149,6 +149,9 @@ def scrub_directives(db, source_ids, stamp, *, source_refs=()):
     """
     affected = _empty()
     source_ids = set(source_ids)
+    from .routine_settings import scrub_deleted_sources
+    custom=scrub_deleted_sources(db,source_ids,stamp)
+    for key,values in custom.items():affected[key].update(values)
     _scrub_requests(db, _dependent_requests(db, source_ids, source_refs), stamp, affected)
     if "task_requirement_revisions" in _tables(db):
         tasks = set()

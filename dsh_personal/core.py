@@ -110,8 +110,15 @@ class Store:
             if routine in {'A2', 'A3'}:
                 from .conversation_style import initial_prompt
                 content = initial_prompt(routine)
+            dimensions = []
+            if routine == 'A2':
+                from .routine_settings import reflection_snapshot
+                snapshot = reflection_snapshot(c, aid, create=True)
+                dimensions = snapshot['settings']['dimensions']
+                if snapshot['version']:
+                    content += '\n本次可以围绕' + '、'.join(d['label'] for d in dimensions) + '展开，先聊你最在意的一项。'
             ready=None if routine=='A1' else now
-            c.execute('INSERT INTO activities(id,routine,business_date,status,created_at,scheduled_at,triggered_at,ready_at,origin,notification_state,current_step) VALUES(?,?,?,?,?,?,?,?,?,?,?)',(aid,routine,day,'preparing' if routine=='A1' else 'awaiting_reply',now,scheduled_at,now,ready,'backfill' if historical else origin,'historical_silent' if historical else ('recovery_silent' if origin=='recovery' else 'page_only'),'doctorate' if routine=='A2' else None))
+            c.execute('INSERT INTO activities(id,routine,business_date,status,created_at,scheduled_at,triggered_at,ready_at,origin,notification_state,current_step) VALUES(?,?,?,?,?,?,?,?,?,?,?)',(aid,routine,day,'preparing' if routine=='A1' else 'awaiting_reply',now,scheduled_at,now,ready,'backfill' if historical else origin,'historical_silent' if historical else ('recovery_silent' if origin=='recovery' else 'page_only'),dimensions[0]['id'] if dimensions else None))
             if routine!='A1' or origin=='manual':
                 c.execute('INSERT INTO messages VALUES(?,?,NULL,?,?,?, ?,NULL,NULL,0)',(uid(),aid,'assistant',content,now,'local_prompt'))
             self._enqueue(c,'session',aid)
@@ -129,6 +136,8 @@ class Store:
             attachments=[obj(r) for r in c.execute('SELECT * FROM attachments WHERE activity_id=?',(aid,))]
             qs=c.execute('SELECT questions FROM native_questions WHERE activity_id=?',(aid,)).fetchone()
             reflection=[{**obj(r),'source_ids':json.loads(r['source_ids'])} for r in c.execute('SELECT * FROM reflection_steps WHERE activity_id=?',(aid,))]
+            from .routine_settings import reflection_snapshot
+            reflection_dimensions=reflection_snapshot(c,aid)['settings']['dimensions'] if a['routine']=='A2' else []
         history=[]
         with self.db() as c:
             if c.execute("SELECT 1 FROM sqlite_master WHERE name='records_profile'").fetchone() and not c.execute("SELECT 1 FROM records_meta WHERE key='quarantine' AND value='1'").fetchone():
@@ -145,13 +154,15 @@ class Store:
             if blocked and not blocked.get('requirements_changed') and any(m['role']=='user' and m['id'] not in blocked.get('source_user_ids',[]) for m in messages):blocked=None
             from .learning_schedule import processing as schedule_processing
             processing=public_status(self,aid) or processing or blocked or schedule_processing(self,aid)
+            gap=json.loads(self.meta('learning_topic_gap:'+aid,'null'))
+            if gap and not a['ready_at']:processing=gap
         a['display_status']=a['status']
         if a['routine']=='A1' and not a['ready_at'] and processing:
             state=processing.get('status')
             if state in ('rejected','failed','cancelled','delayed','recovery_hold'):
                 a['display_status']='learning_'+('cancelled' if state=='recovery_hold' else state)
-        return {'activity':a,'messages':messages,'summary':json.loads(s['content']) if s else None,'summary_state':s['state'] if s else 'pending','corrections':corrections,'attachments':attachments,'reflection':reflection,'questions':json.loads(qs[0]) if qs else [],'historical_records':history,'processing':processing}
-    def submit(self,aid,submission_id,body,call_id=None,question_id=None):
+        return {'activity':a,'messages':messages,'summary':json.loads(s['content']) if s else None,'summary_state':s['state'] if s else 'pending','corrections':corrections,'attachments':attachments,'reflection':reflection,'reflection_dimensions':reflection_dimensions,'questions':json.loads(qs[0]) if qs else [],'historical_records':history,'processing':processing}
+    def submit(self,aid,submission_id,body,call_id=None,question_id=None,control_message=False):
         if not isinstance(body,str) or not body.strip() or len(body)>100000:raise ValueError('请输入 1–100000 字符')
         if not isinstance(submission_id,str) or not 8<=len(submission_id)<=128:raise ValueError('缺少稳定提交 ID')
         if bool(call_id)!=bool(question_id):raise ValueError('回答原生问题须同时指定问题批次与问题ID')
@@ -166,36 +177,38 @@ class Store:
             a=c.execute('SELECT * FROM activities WHERE id=?',(aid,)).fetchone()
             if not a:raise KeyError('活动不存在')
             mid=uid()
-            c.execute('INSERT INTO messages VALUES(?,?,?,?,?,?,?,NULL,NULL,0)',(mid,aid,submission_id,'user',body,now,'pending'))
+            c.execute('INSERT INTO messages VALUES(?,?,?,?,?,?,?,NULL,NULL,0)',(mid,aid,submission_id,'user',body,now,'command_pending' if control_message else 'pending'))
             from .feedback import capture as capture_feedback
             capture_feedback(c,mid,now)
             if call_id:c.execute('INSERT INTO message_targets VALUES(?,?,?)',(mid,call_id,question_id))
             # A brief relevant response completes a basic sleep record; discussion stays open.
             status='basic_complete' if a['routine']=='A3' and re.search(r'睡|起|醒|困|梦|\d[:：]\d|分|质量',body) else 'partial'
-            c.execute('UPDATE activities SET version=version+1,status=? WHERE id=?',(status,aid))
-            if a['routine']=='A2':
-                dimensions={'doctorate':['博士','实验','论文'],'startup':['创业','产品','商业'],'culture':['文化','阅读','写作','作品']}
+            c.execute('UPDATE activities SET version=version+1,status=? WHERE id=?',(a['status'] if control_message else status,aid))
+            if a['routine']=='A2' and not control_message:
+                from .routine_settings import reflection_snapshot
+                dimension_snapshot=reflection_snapshot(c,aid)
+                dimensions={d['id']:[d['label'],*d['keywords']] for d in dimension_snapshot['settings']['dimensions']}
                 mentioned=[line for line,words in dimensions.items() if any(word in body for word in words)]
-                if re.search(r'科研(?!创业)',body) and 'doctorate' not in mentioned:mentioned.insert(0,'doctorate')
-                if not mentioned and re.search(r'无进展|未投入|不想谈|今天|我|完成|认识|遇到',body):mentioned=[a['current_step'] or 'doctorate']
+                if dimension_snapshot['version']==0 and re.search(r'科研(?!创业)',body) and 'doctorate' not in mentioned:mentioned.insert(0,'doctorate')
+                if not mentioned and re.search(r'无进展|未投入|不想谈|今天|我|完成|认识|遇到',body):mentioned=[a['current_step'] if a['current_step'] in dimensions else next(iter(dimensions))]
                 for line in mentioned:
                     prev=c.execute('SELECT source_ids FROM reflection_steps WHERE activity_id=? AND line=?',(aid,line)).fetchone()
                     refs=json.loads(prev[0]) if prev else [];refs.append(mid)
                     state='skipped' if re.search(r'不想谈|跳过这一',body) else 'answered'
                     c.execute('INSERT OR REPLACE INTO reflection_steps VALUES(?,?,?,?)',(aid,line,state,dumps(refs)))
                 done=[r[0] for r in c.execute('SELECT line FROM reflection_steps WHERE activity_id=?',(aid,))]
-                if len(done)==3:c.execute("UPDATE activities SET status='basic_complete' WHERE id=?",(aid,))
+                if set(dimensions)<=set(done):c.execute("UPDATE activities SET status='basic_complete' WHERE id=?",(aid,))
                 # Keep current dimension while user is explicitly exploring it.
                 if mentioned and not re.search(r'深入|继续聊|展开|[?？]|为什么|如何',body):
                     nxt=next((line for line in dimensions if line not in done),a['current_step'])
                     c.execute('UPDATE activities SET current_step=? WHERE id=?',(nxt,aid))
-            self._enqueue(c,'handoff',mid)
-            if a['routine'] in {'A2','A3'}:self._enqueue(c,'summary',aid,a['version']+1)
-            return {'receipt':mid,'activity_id':aid,'processing_state':'pending','received_at':now,'duplicate':False}
+            if not control_message:self._enqueue(c,'handoff',mid)
+            if a['routine'] in {'A2','A3'} and not control_message:self._enqueue(c,'summary',aid,a['version']+1)
+            return {'receipt':mid,'activity_id':aid,'processing_state':'command_pending' if control_message else 'pending','received_at':now,'duplicate':False}
     def summary_snapshot(self,aid):
         view=self.activity(aid);a=view['activity']
         if a['routine'] not in {'A2','A3'}:raise ValueError('学习与日常聊天不进入定向摘要')
-        return {'activity_id':aid,'routine':a['routine'],'business_date':a['business_date'],'input_version':a['version'],'correction_version':a['correction_version'],'messages':[m for m in view['messages'] if m['role']=='user'],'corrections':view['corrections']}
+        return {'activity_id':aid,'routine':a['routine'],'business_date':a['business_date'],'input_version':a['version'],'correction_version':a['correction_version'],'messages':[m for m in view['messages'] if m['role']=='user' and m['processing_state'] not in ('command_pending','command_applied')],'corrections':view['corrections'],'reflection_dimensions':view['reflection_dimensions']}
     def summarize_literal(self,aid):
         """Source-preserving partial record, explicitly distinct from semantic model summary."""
         s=self.summary_snapshot(aid)
@@ -231,19 +244,44 @@ class Store:
             self._enqueue(c,'summary',aid,a['version']+a['correction_version']*1000000)
         self.summarize_literal(aid)
         return self.activity(aid)
-    def control(self,aid,action,**kw):
+    def control(self,aid,action,submission_id=None,source=None,**kw):
         self.activity(aid)
+        if submission_id is not None and (not isinstance(submission_id,str) or not 1<=len(submission_id)<=200):raise ValueError('提交编号无效')
+        if source is not None and (not isinstance(source,str) or not source.strip() or len(source)>100000):raise ValueError('操作来源无效')
+        fingerprint=hashlib.sha256(dumps([aid,action,kw,source]).encode()).hexdigest()
+        result=None;duplicate=False
         with self.db(True) as c:
-            if action in {'skip','end','continue'}:
-                c.execute('UPDATE activities SET status=? WHERE id=?',({'skip':'skipped','end':'user_ended','continue':'awaiting_reply'}[action],aid))
-            elif action=='bookmark':c.execute('UPDATE activities SET bookmarked=? WHERE id=?',(bool(kw.get('value',True)),aid))
-            elif action=='snooze':
-                when=dt.datetime.fromisoformat(kw['remind_at'])
-                if when.tzinfo is None:when=when.replace(tzinfo=TZ)
-                if when<=self.now():raise ValueError('提醒时间应在未来')
-                c.execute("INSERT INTO notifications VALUES(?,?, 'snooze','pending',?,0,NULL,NULL,?) ON CONFLICT(activity_id,kind) DO UPDATE SET state='pending',run_after=excluded.run_after,attempts=0,receipt=NULL,error=NULL",(uid(),aid,when.astimezone(UTC).isoformat(),self.stamp()))
-            else:raise ValueError('未知活动操作')
-        return self.activity(aid)
+            if submission_id:
+                cached=c.execute('SELECT value FROM meta WHERE key=?',('activity_control_request:'+submission_id,)).fetchone()
+                if cached:
+                    record=json.loads(cached[0])
+                    if record.get('deleted'):raise ValueError('原操作来源已删除，请明确重新操作')
+                    if record['fingerprint']!=fingerprint:raise ValueError('提交编号已用于其他活动操作')
+                    source_id=record.get('source_message_id')
+                    if source_id and (c.execute("SELECT 1 FROM messages WHERE id=? AND deleted=1",(source_id,)).fetchone() or c.execute("SELECT 1 FROM tombstones WHERE target_id=? AND target_type IN ('message','derived_message')",(source_id,)).fetchone()):raise ValueError('原操作来源已删除，请明确重新操作')
+                    result=record['result'];duplicate=True
+            if not duplicate:
+                if action in {'skip','end','continue'}:
+                    c.execute('UPDATE activities SET status=? WHERE id=?',({'skip':'skipped','end':'user_ended','continue':'awaiting_reply'}[action],aid))
+                elif action=='bookmark':c.execute('UPDATE activities SET bookmarked=? WHERE id=?',(bool(kw.get('value',True)),aid))
+                elif action=='snooze':
+                    when=dt.datetime.fromisoformat(kw['remind_at'])
+                    if when.tzinfo is None:when=when.replace(tzinfo=TZ)
+                    if when<=self.now():raise ValueError('提醒时间应在未来')
+                    c.execute("INSERT INTO notifications VALUES(?,?, 'snooze','pending',?,0,NULL,NULL,?) ON CONFLICT(activity_id,kind) DO UPDATE SET state='pending',run_after=excluded.run_after,attempts=0,receipt=NULL,error=NULL",(uid(),aid,when.astimezone(UTC).isoformat(),self.stamp()))
+                else:raise ValueError('未知活动操作')
+                if submission_id:
+                    activity=c.execute('SELECT status,bookmarked FROM activities WHERE id=?',(aid,)).fetchone()
+                    result={'receipt':uid(),'activity_id':aid,'action':action,'status':activity['status'],'bookmarked':bool(activity['bookmarked']),'created_at':self.stamp()}
+                    if action=='snooze':result['remind_at']=when.astimezone(UTC).isoformat()
+                    message=c.execute("SELECT id FROM messages WHERE submission_id=? AND role='user' AND deleted=0",(submission_id,)).fetchone()
+                    # Retain only operation identity and a command digest. No
+                    # conversation or copied settings text enters this cache.
+                    record={'fingerprint':fingerprint,'source_message_id':message[0] if message else None,'result':result}
+                    c.execute('INSERT INTO meta VALUES(?,?)',('activity_control_request:'+submission_id,dumps(record)))
+        view=self.activity(aid)
+        if submission_id:view['control_receipt']={**result,'duplicate':duplicate}
+        return view
     def schedules(self):
         with self.db() as c:rows=[obj(r) for r in c.execute('SELECT * FROM schedules ORDER BY routine')]
         for r in rows:r['weekdays']=json.loads(r['weekdays']);r['next_at']=self.next_schedule(r)
@@ -255,18 +293,33 @@ class Store:
             candidate=dt.datetime.combine(day,dt.time.fromisoformat(s['time']),TZ)
             if candidate>now and day.weekday() in s['weekdays'] and (not s['paused_until'] or day.isoformat()>s['paused_until']):return candidate.isoformat()
         return None
-    def change_schedule(self,routine,time,weekdays,paused_until,source,actor='user'):
+    def change_schedule(self,routine,time,weekdays,paused_until,source,actor='user',submission_id=None,expected_updated_at=None):
         if actor!='user' or not source:raise PermissionError('只有明确用户输入可以更改日程')
         if routine not in ROUTINES:raise ValueError('未知例程')
+        if not isinstance(time,str) or not re.fullmatch(r'(?:[01][0-9]|2[0-3]):[0-5][0-9]',time):raise ValueError('时间请使用24小时制 HH:MM')
         dt.time.fromisoformat(time)
-        if not weekdays or any(type(x)!=int or x not in range(7) for x in weekdays):raise ValueError('请选择至少一个星期日')
+        if not isinstance(weekdays,list) or not weekdays or any(type(x)!=int or x not in range(7) for x in weekdays):raise ValueError('请选择至少一个星期日')
         if paused_until:dt.date.fromisoformat(paused_until)
+        fingerprint=hashlib.sha256(dumps([routine,time,sorted(set(weekdays)),paused_until or None,source]).encode()).hexdigest()
+        if submission_id is not None and (not isinstance(submission_id,str) or not 1<=len(submission_id)<=200):raise ValueError('提交编号无效')
         with self.db(True) as c:
+            if c.execute("SELECT 1 FROM meta WHERE key='isolated' AND value='true'").fetchone():raise PermissionError('恢复隔离中，不能更改日程')
+            if submission_id:
+                prior=c.execute('SELECT value FROM meta WHERE key=?',('schedule_request:'+submission_id,)).fetchone()
+                if prior:
+                    prior=json.loads(prior[0])
+                    if prior['fingerprint']!=fingerprint:raise ValueError('提交编号已用于其他日程')
+                    return {**prior['result'],'duplicate':True}
             before=obj(c.execute('SELECT * FROM schedules WHERE routine=?',(routine,)).fetchone())
+            if expected_updated_at is not None and before['updated_at']!=expected_updated_at:raise ValueError('日程已在其他窗口更新，请刷新后再修改')
             after={'routine':routine,'time':time,'weekdays':sorted(set(weekdays)),'paused_until':paused_until or None}
             c.execute('UPDATE schedules SET time=?,weekdays=?,paused_until=?,updated_at=?,source=?,effective_at=? WHERE routine=?',(time,dumps(after['weekdays']),paused_until or None,self.stamp(),source,self.stamp(),routine))
-            c.execute('INSERT INTO schedule_events VALUES(?,?,?,?,?,?)',(uid(),routine,dumps(before),dumps(after),source,self.stamp()))
-        return next(s for s in self.schedules() if s['routine']==routine)
+            receipt=uid()
+            c.execute('INSERT INTO schedule_events VALUES(?,?,?,?,?,?)',(receipt,routine,dumps(before),dumps(after),source,self.stamp()))
+            result={**obj(c.execute('SELECT * FROM schedules WHERE routine=?',(routine,)).fetchone()),'weekdays':after['weekdays'],'receipt':receipt,'before':{**before,'weekdays':json.loads(before['weekdays'])},'duplicate':False}
+            result['next_at']=self.next_schedule(result)
+            if submission_id:c.execute('INSERT INTO meta VALUES(?,?)',('schedule_request:'+submission_id,dumps({'fingerprint':fingerprint,'result':result})))
+        return result
     def tick(self,recovery=False):
         if self.meta('isolated')=='true':return []
         from .learning_schedule import tick as learning_tick

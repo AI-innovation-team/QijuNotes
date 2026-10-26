@@ -141,6 +141,10 @@ def _valid(db, row, today):
     current = db.execute('SELECT * FROM activities WHERE id=?', (row['activity_id'],)).fetchone()
     if not current or current['routine'] != 'A1' or current['session_id'] != row['session_id'] or current['session_state'] != 'ready':
         return 'session_changed'
+    from .learning import source_identity_frozen
+    from .routine_settings import read_settings
+    if row['mode']=='initial' and not source_identity_frozen(db,row['activity_id']) and row['manifest'].get('routine_settings_version', 0) != read_settings(db, 'A1')['version']:
+        return 'preferences_changed'
     for mid, digest in row['user_hashes'].items():
         source = db.execute("SELECT body FROM messages WHERE id=? AND activity_id=? AND role='user' AND deleted=0",
                             (mid, row['activity_id'])).fetchone()

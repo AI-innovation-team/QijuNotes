@@ -234,6 +234,7 @@ def recovery_ledger(app):
     with app.store.db() as db:
         from .feedback import ledger as feedback_ledger
         from .study import ledger as study_ledger
+        from .routine_settings import ledger as routine_settings_ledger
         tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         core = {
             "tombstones": _rows(db, "tombstones"),
@@ -251,6 +252,9 @@ def recovery_ledger(app):
             "learning_reviews": learning_review_ledger(db),
             "feedback": feedback_ledger(db),
             "study": study_ledger(db),
+            "routine_settings": routine_settings_ledger(db),
+            "schedules": _rows(db, "schedules"),
+            "schedule_events": _rows(db, "schedule_events"),
             "learning_releases": _rows(db,"learning_releases") if "learning_releases" in tables else [],
             "usage": _rows(db, "usage"),
             "usage_details": _rows(db, "usage_details") if "usage_details" in tables else [],
@@ -721,6 +725,14 @@ def _merge_core_ledger(store, ledger, original_bodies=None):
     affected = {key: set() for key in ("activity_ids", "task_ids", "message_ids", "native_session_ids", "attachment_ids")}
     with store.db(True) as db:
         core = ledger["core"]
+        from .routine_settings import merge_ledger as merge_routine_settings
+        merge_routine_settings(db, core.get('routine_settings', []))
+        for row in core.get('schedules', []):
+            current=db.execute('SELECT updated_at,effective_at FROM schedules WHERE routine=?',(row['routine'],)).fetchone()
+            if row['routine'] in ('A1','A2','A3') and (not current or current['effective_at']=='1970-01-01T00:00:00+00:00' or current['updated_at']<row['updated_at']):
+                db.execute('INSERT OR REPLACE INTO schedules VALUES(?,?,?,?,?,?,?)',tuple(row[k] for k in ('routine','time','weekdays','paused_until','updated_at','source','effective_at')))
+        for row in core.get('schedule_events', []):
+            db.execute('INSERT OR IGNORE INTO schedule_events VALUES(?,?,?,?,?,?)',tuple(row[k] for k in ('id','routine','before_json','after_json','source','created_at')))
         from .learning_schedule import initialize as initialize_learning_schedule
         initialize_learning_schedule(db)
         for row in core.get('learning_releases',[]):

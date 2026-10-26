@@ -27,7 +27,7 @@ def apply_message_deletion(c,mid,stamp,fingerprint=None,original_body=None,*,sou
     if m:
         tomb('message',mid,fingerprint)
         c.execute("UPDATE messages SET body='',deleted=1,processing_state='deleted',error=NULL WHERE id=?",(mid,))
-    aids={m['activity_id']} if m else set();task_ids=set(cleaned['task_ids']);native=set(cleaned['native_session_ids']);message_ids=set(cleaned['message_ids'])|({mid} if m else set());assets=set()
+    aids=({m['activity_id']} if m else set())|set(cleaned['activity_ids']);task_ids=set(cleaned['task_ids']);native=set(cleaned['native_session_ids']);message_ids=set(cleaned['message_ids'])|({mid} if m else set());assets=set()
     # Explicit context provenance propagates deletion to sessions that received a
     # derived profile or a linked original. It is not inferred from message count.
     context_refs={'message:'+mid,'activity:'+m['activity_id']} if m else set(source_refs or (['message:'+mid] if mid else []))

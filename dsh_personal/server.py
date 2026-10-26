@@ -168,7 +168,12 @@ class Application:
         weekly['lines']={line:self.visible_rows(rows) for line,rows in weekly['lines'].items()}
         weekly['activity_evidence']=self.visible_rows(weekly['activity_evidence'])
         chronicle=self.history()
-        return {'today':self.store.today(),'date':day,'activities':activities,'recent_activities':recent,'routine_projects':projects,'chronicle':chronicle,'chronicle_settings':self.chronicle.settings(),'calendar_events':self.calendar.events(day[:7],start=calendar_start,end=calendar_end),'bookmarks':self.bookmarks(),'schedules':self.store.schedules(),'gaps':self.store.gaps(day),'tasks':self.visible_rows(self.store.tasks()),'weekly_review':weekly,'journal':([] if journal_mode=='undated' else self.visible_rows(self.store.journal(journal_day,query)))+[{**m,'source':'import'} for m in imported],'profiles':self.visible_rows(profiles),'growth':growth,'imports':self.records.list_batches(),'budget':self.store.budget(),'health':{'version':__version__,'model':config.get('model',{}).get('name','待配置'),'model_error':self.store.meta('model_error'),'model_context':'仅当前会话及所选作用域的有效资料；历史不会全量发送','notification':notification_status,'backup':self.store.meta('last_backup','尚无备份'),'pending':pending,'errors':errors,'last_success':self.store.meta('model_last_success'),'storage_bytes':sum(p.stat().st_size for p in self.data.rglob('*') if p.is_file()),'isolated':self.store.meta('isolated')=='true','observation':{'started_at':self.store.meta('observation_started'),'required_days':7,'status':'观察中，未验收'},'worker_error':self.store.meta('worker_error')}}
+        from .routine_settings import state as routine_settings_state
+        from .learning import source_options
+        with self.store.db() as db:
+            routine_settings=routine_settings_state(db)
+            learning_source_options=source_options(db,self.store.today())
+        return {'today':self.store.today(),'date':day,'activities':activities,'recent_activities':recent,'routine_projects':projects,'chronicle':chronicle,'routine_settings':routine_settings,'learning_source_options':learning_source_options,'chronicle_settings':self.chronicle.settings(),'calendar_events':self.calendar.events(day[:7],start=calendar_start,end=calendar_end),'bookmarks':self.bookmarks(),'schedules':self.store.schedules(),'gaps':self.store.gaps(day),'tasks':self.visible_rows(self.store.tasks()),'weekly_review':weekly,'journal':([] if journal_mode=='undated' else self.visible_rows(self.store.journal(journal_day,query)))+[{**m,'source':'import'} for m in imported],'profiles':self.visible_rows(profiles),'growth':growth,'imports':self.records.list_batches(),'budget':self.store.budget(),'health':{'version':__version__,'model':config.get('model',{}).get('name','待配置'),'model_error':self.store.meta('model_error'),'model_context':'仅当前会话及所选作用域的有效资料；历史不会全量发送','notification':notification_status,'backup':self.store.meta('last_backup','尚无备份'),'pending':pending,'errors':errors,'last_success':self.store.meta('model_last_success'),'storage_bytes':sum(p.stat().st_size for p in self.data.rglob('*') if p.is_file()),'isolated':self.store.meta('isolated')=='true','observation':{'started_at':self.store.meta('observation_started'),'required_days':7,'status':'观察中，未验收'},'worker_error':self.store.meta('worker_error')}}
     def bookmarks(self):
         from .learning_schedule import is_hidden
         with self.store.db() as c:rows=[dict(r) for r in c.execute('SELECT * FROM activities WHERE bookmarked=1 ORDER BY business_date DESC') if not is_hidden(c,r['id'])]
@@ -223,23 +228,49 @@ class Application:
         if op=='calendar_status':return self.calendar.change_status(p['event_id'],p['expected_version'],p['status'])
         if op=='ensure_activity':return {'activity':s.ensure_activity(p['routine'],p.get('date'))}
         if op=='message':
-            receipt=s.submit(p['activity_id'],p['submission_id'],p['body'],p.get('call_id'),p.get('question_id'))
+            prior_activity=s.activity(p['activity_id'])['activity']
+            from .interaction import is_local_control
+            control_message=is_local_control(p['body'],prior_activity['routine'])
+            receipt=s.submit(p['activity_id'],p['submission_id'],p['body'],p.get('call_id'),p.get('question_id'),control_message=control_message)
             # Only first committed delivery interprets explicit commands; retry reuses original receipt.
-            if not receipt['duplicate']:
+            if not receipt['duplicate'] or receipt['processing_state']=='command_pending':
                 from .interaction import command
-                result=command(s,p['body'],p['activity_id'],p['submission_id'])
+                try:result=command(s,p['body'],p['activity_id'],p['submission_id'])
+                except (ValueError,PermissionError) as error:
+                    if not control_message:raise
+                    result={'message':'未更新设置：'+str(error)}
                 if result:
                     with s.db(True) as c:
-                        c.execute("INSERT INTO messages VALUES(?,?,NULL,'assistant',?,?, 'local_control',NULL,NULL,0)",(uid(),p['activity_id'],result['message'],s.stamp()))
+                        control_id=result.get('receipt') if str(result.get('receipt','')).startswith('routine-settings:') else 'local-command:'+receipt['receipt']
+                        c.execute("INSERT OR IGNORE INTO messages VALUES(?,?,NULL,'assistant',?,?, 'local_control',NULL,NULL,0)",(control_id,p['activity_id'],result['message'],s.stamp()))
+                        if result.get('routine_settings'):
+                            c.execute('INSERT OR REPLACE INTO meta VALUES(?,?)',('routine_settings_display:'+control_id,dumps({'receipt_id':control_id,'versions':{routine:record['version'] for routine,record in result['routine_settings'].items()}})))
                         c.execute("UPDATE jobs SET status='done' WHERE kind='handoff' AND target=?",(receipt['receipt'],))
                         c.execute("UPDATE messages SET processing_state='command_applied' WHERE id=?",(receipt['receipt'],))
+                        if not control_message and prior_activity['routine'] in {'A2','A3'} and p['body'].strip() not in {'跳过本次','今天先不聊','跳过今天','今天到这里','结束本次','继续','继续本次'}:
+                            for row in c.execute('SELECT line,source_ids FROM reflection_steps WHERE activity_id=?',(p['activity_id'],)).fetchall():
+                                refs=[ref for ref in json.loads(row['source_ids']) if ref!=receipt['receipt']]
+                                if refs:c.execute('UPDATE reflection_steps SET source_ids=? WHERE activity_id=? AND line=?',(dumps(refs),p['activity_id'],row['line']))
+                                else:c.execute('DELETE FROM reflection_steps WHERE activity_id=? AND line=?',(p['activity_id'],row['line']))
+                            c.execute('UPDATE activities SET status=?,current_step=? WHERE id=? AND version=?',(prior_activity['status'],prior_activity['current_step'],p['activity_id'],prior_activity['version']+1))
+                            c.execute('UPDATE activities SET version=version+1 WHERE id=?',(p['activity_id'],))
                     receipt['command']=result
+                    receipt['processing_state']='command_applied'
+                elif control_message:
+                    # A conservative detector must not strand a conversation if
+                    # a future grammar revision declines its candidate.
+                    with s.db(True) as c:
+                        c.execute("UPDATE messages SET processing_state='pending' WHERE id=?",(receipt['receipt'],))
+                        s._enqueue(c,'handoff',receipt['receipt'])
             return receipt
         if op=='activity_control':return s.control(p['activity_id'],p['action'],remind_at=p.get('remind_at'),value=p.get('value'))
         if op=='natural':
             from .interaction import command
             return command(s,p['body'],p.get('activity_id'),p.get('submission_id')) or s.natural(p['body'],p.get('submission_id'))
-        if op=='schedule':return s.change_schedule(p['routine'],p['time'],p['weekdays'],p.get('paused_until'),p['source'])
+        if op=='routine_settings':
+            from .routine_settings import save_settings
+            return save_settings(s,p['routine'],p['settings'],p['expected_version'],p['submission_id'],'本人通过内容设置提交')
+        if op=='schedule':return s.change_schedule(p['routine'],p['time'],p['weekdays'],p.get('paused_until'),p['source'],submission_id=p.get('submission_id'),expected_updated_at=p.get('expected_updated_at'))
         if op=='correction':return s.correct(p['activity_id'],p['fields'],p.get('source','用户在更正控件提交'))
         if op=='presented':
             lease=self.leases.get(p.get('lease'))

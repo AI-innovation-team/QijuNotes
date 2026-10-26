@@ -178,3 +178,28 @@ input:focus,textarea:focus,select:focus{border-color:#5988d5;box-shadow:0 0 0 3p
 /* Keep every sidebar destination reachable after adding feedback and study. */
 .navigation-rail .nav{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}.navigation-rail .nav::-webkit-scrollbar{display:none}.navigation-rail .rail-link{flex-shrink:0}
 [data-feedback-id]>.markdown-body{margin-block:14px}[data-feedback-id]>details{margin-block:12px}[data-study-note]>.markdown-body{margin-block:12px}
+
+/* Daily routines: comfortable, versioned content editors, shared with mobile. */
+.routine-settings-row{align-items:flex-start;gap:16px;padding-block:20px}
+.routine-settings-row .row-start{flex:1;min-width:0;align-items:flex-start}
+.routine-settings-row .row-start>div{min-width:0}
+.routine-settings-summary{overflow-wrap:anywhere;line-height:1.7}
+.routine-settings-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;flex-shrink:0}
+.routine-settings-actions button{min-height:42px}
+.routine-settings-actions svg{width:16px;height:16px}
+.routine-settings-shortcut{color:var(--muted);font-size:.8rem}
+.routine-dimension{border:1px solid var(--line);border-radius:14px;margin:18px 0;padding:14px;min-width:0}
+.routine-dimension legend{color:var(--muted);font-size:.8rem;padding-inline:7px}
+.routine-dimension-top{display:flex;gap:6px;align-items:center}
+.routine-dimension-top input{min-width:0;flex:1}
+.routine-dimension textarea{min-height:82px;line-height:1.7}
+.routine-keywords{margin-top:12px;color:var(--muted);font-size:.85rem}
+.routine-keywords input{margin-top:10px}
+#routine-settings-form>label{margin-top:20px}
+#routine-settings-form .form-actions{margin-top:24px}
+.routine-settings-receipt .markdown-body{margin-block:14px}
+.routine-settings-receipt details{margin-top:15px}
+.reflection-dimensions{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}
+.reflection-dimensions h4{margin-bottom:10px}
+.reflection-dimensions p{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.82rem}
+@media(max-width:760px){.routine-settings-row{flex-direction:column}.routine-settings-actions{width:100%;justify-content:flex-end}.routine-settings-actions button{min-height:44px}.routine-dimension{padding:12px}.routine-dimension-top .icon-button{width:44px;height:44px}.routine-settings-row .row-start{width:100%}}
